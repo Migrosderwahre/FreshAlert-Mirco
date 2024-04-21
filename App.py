@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Bild einfügen
-bild = st.image('18-04-_2024_11-16-47.png', caption='Test')
+st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
 
 bild3 = st.image('21-04-_2024_16-28-26.png')
 
