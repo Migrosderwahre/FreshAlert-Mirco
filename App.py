@@ -5,7 +5,7 @@ bild = st.image('18-04-_2024_11-16-47.png', caption='Test')
 
 # CSS-Stile für die Bildpositionierung
 bild.markdown(
-    f'<style>img.stImage {{ position: absolute; top: 0; right: 0; }}</style>',
+    f'<style>img.stImage {{ position: absolute; top: 4; right: 3; }}</style>',
     unsafe_allow_html=True
 )
 
