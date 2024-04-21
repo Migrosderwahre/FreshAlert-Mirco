@@ -1,4 +1,8 @@
 pandas
-requests
+numpy
 streamlit
- 
+datetime
+matplotlib
+mysql.connector
+mysql.connector.python
+plotly
