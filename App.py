@@ -113,7 +113,7 @@ def add_new_food():
             if "my_fridge" not in st.session_state:
                 st.session_state.my_fridge = pd.DataFrame(columns=["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"])
             st.session_state.my_fridge = st.session_state.my_fridge.append(pd.Series(new_entry), ignore_index=True)
-
+            st.write(st.session_state.my_fridge)  # Zum Debuggen: Zeigen Sie den aktualisierten Kühlschrank an
 
 
 
