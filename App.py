@@ -88,7 +88,7 @@ def show_fresh_alert_page():
 
 def show_my_fridge():
     st.title("Mein Kühlschrank")
-    if "my_fridge" in st.session_state:
+    if "my_fridge" in st.session_state and not st.session_state.my_fridge.empty:
         st.write(st.session_state.my_fridge)
     else:
         st.write("Noch keine Lebensmittel hinzugefügt.")
@@ -103,15 +103,16 @@ def add_new_food():
         expiry_date = st.date_input("Ablaufdatum", key="food_expiry_date")
         submitted = st.form_submit_button("Hinzufügen")
         if submitted:
+            new_entry = {
+                "Lebensmittel": food_name,
+                "Kategorie": category,
+                "Lagerort": location,
+                "Ablaufdatum": expiry_date
+            }
             if "my_fridge" not in st.session_state:
-                st.session_state.my_fridge = []
-            st.session_state.my_fridge.append(
-                (food_name, category, location, expiry_date)
-            )
-            st.session_state.my_fridge = pd.DataFrame(
-                st.session_state.my_fridge,
-                columns=["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"],
-            )
+                st.session_state.my_fridge = pd.DataFrame(columns=["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"])
+            st.session_state.my_fridge = st.session_state.my_fridge.append(new_entry, ignore_index=True)
+
 
 def show_my_friends():
     st.write("Meine Freunde")
@@ -131,6 +132,8 @@ def save_data_to_database_food():
 def main():
     init_github()
     init_dataframe()
+    add_new_food()
+    show_my_fridge()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
