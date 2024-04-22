@@ -71,7 +71,7 @@ def show_registration_page():
 
     for key, value in new_entry.items():
         if value == "":
-            st.text_input.error(f"Bitte ergänze das Feld '{key}'")
+            st.error(f"Bitte ergänze das Feld '{key}'")
             return
 
     if st.button("Add"):
