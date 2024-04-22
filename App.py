@@ -44,14 +44,14 @@ def show_login_page():
         with st.sidebar:
             show_registration_page()
 
-
-  def show_registration_page():
+def show_registration_page():
     st.title("Registrieren")
     first_name = st.text_input("Vorname", key="register_first_name_input")
     last_name = st.text_input("Nachname", key="register_last_name_input")
     email = st.text_input("E-Mail", key="register_email_input")
     password = st.text_input("Passwort", type="password", key="register_password_input")
     confirm_password = st.text_input("Passwort wiederholen", type="password", key="confirm_register_password_input")
+  
 
   
     if st.button("Registrieren"):
