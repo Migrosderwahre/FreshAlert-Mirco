@@ -33,15 +33,20 @@ def show_login_page():
     email = st.text_input("E-Mail", key="login_email")
     password = st.text_input("Passwort", type="password", key="login_password")
     if st.button("Login"):
-        if email == "example@example.com" and password == "password":
+        login_successful = False
+        for index, row in st.session_state.df.iterrows():
+            if row["E-Mail"] == email and row["Passwort"] == password:
+                login_successful = True
+                break
+        if login_successful:
             st.success("Erfolgreich eingeloggt!")
-            show_fresh_alert_page()
+            # Hier kannst du weitere Schritte nach dem Login durchführen
         else:
             st.error("Ungültige E-Mail oder Passwort.")
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
-            show_registration_page()
+        show_registration_page()
 
 def show_registration_page():
     st.title("Registrieren")
@@ -54,7 +59,6 @@ def show_registration_page():
         DATA_COLUMNS[4]:  st.text_input(DATA_COLUMNS[4], type="password"), #Passwort wiederholen
     }
 
-
     for key, value in new_entry.items():
         if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
@@ -63,6 +67,9 @@ def show_registration_page():
     if st.button("Registrieren"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
+        # Speichere die Daten in der Datenbank
+
+
         if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
             st.success("Registrierung erfolgreich!")
             st.session_state.show_registration = False  # Setze den Status zurück
@@ -73,7 +80,9 @@ def show_registration_page():
         msg = f"Add contact '{name}' to the file {DATA_FILE}"
         st.session_state.github.write_df(DATA_FILE, st.session_state.df, msg)
 
-
+def save_data_to_database():
+    # Speichere die aktualisierte DataFrame in der Datenbank
+    st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated registration data")
 
 
 def display_dataframe():
@@ -89,7 +98,8 @@ def main():
   if not is_user_logged_in():
     show_login_page()
   else:
-    show_fresh_alert_page()
+    st.title("Willkommen!")
+        display_dataframe()
 
 init_github()
 init_dataframe()
