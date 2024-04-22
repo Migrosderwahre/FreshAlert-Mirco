@@ -64,7 +64,7 @@ def show_registration_page():
     if st.button("Add"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
-        if password == confirm_password:
+        if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
             st.success("Registrierung erfolgreich!")
             st.session_state.show_registration = False  # Setze den Status zurück
         else:
