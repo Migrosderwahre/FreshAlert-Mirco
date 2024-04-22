@@ -88,9 +88,10 @@ def show_fresh_alert_page():
 
 def show_my_fridge():
     st.title("Mein Kühlschrank")
-    if "my_fridge" not in st.session_state:
-        st.session_state.my_fridge = pd.DataFrame(columns=["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"])
-    st.write(st.session_state.my_fridge)
+    if "my_fridge" in st.session_state:
+        st.write(st.session_state.my_fridge)
+    else:
+        st.write("Noch keine Lebensmittel hinzugefügt.")
 
 def add_new_food():
     st.title("Neues Lebensmittel hinzufügen")
@@ -111,10 +112,6 @@ def add_new_food():
                 st.session_state.my_fridge,
                 columns=["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"],
             )
-            # Zeige die Tabelle mit den Lebensmitteln an
-            st.write(st.session_state.my_fridge)
-            # Speichern Sie die Daten in der Datenbank
-            save_data_to_database_food()
 
 def show_my_friends():
     st.write("Meine Freunde")
@@ -129,7 +126,7 @@ def save_data_to_database_login():
 def save_data_to_database_food():
     # Speichern Sie die Daten in der Datenbank
     if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated contact data")
+        st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated food data")
 
 def main():
     init_github()
