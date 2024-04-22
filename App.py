@@ -97,7 +97,6 @@ init_github()
 init_dataframe()
 display_dataframe()
 show_registration_page()
-show_login_page()
 
 
 if __name__ == "__main__":
