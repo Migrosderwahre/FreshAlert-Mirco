@@ -4,7 +4,7 @@ from datetime import date
 from github_contents import GithubContents
 
 # Set constants
-DATA_FILE = "FreshAlert"
+DATA_FILE = "FreshAlert-Registriering.csv"
 DATA_COLUMNS = ["Vorname", "Nachname","E-Mail", "Passwort", "Passwort wiederholen"]
 
 # Set page configuration
