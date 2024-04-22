@@ -104,7 +104,6 @@ def main():
 st.title("Mein Kontakte-App 🎂 (Woche 4)")
 init_github()
 init_dataframe()
-add_entry_in_sidebar()
 display_dataframe()
 show_registration_page()
 show_login_page()
