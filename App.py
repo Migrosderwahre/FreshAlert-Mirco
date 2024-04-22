@@ -80,6 +80,7 @@ def show_login_page():
         name = new_entry[DATA_COLUMNS[0]]
         msg = f"Add contact '{name}' to the file {DATA_FILE}"
         st.session_state.github.write_df(DATA_FILE, st.session_state.df, msg)
+      if __name__ == "__main__":
 
 
 
@@ -105,5 +106,4 @@ def main():
     show_registration_page()
     show_login_page()
   
-if __name__ == "__main__":
-    main()
+
