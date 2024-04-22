@@ -37,17 +37,14 @@ def show_login_page():
                 login_successful = True
                 break
         if login_successful:
+            st.session_state.user_logged_in = True
             st.success("Erfolgreich eingeloggt!")
-            st.experimental_rerun()  # Neu laden der gesamten App nach erfolgreichem Login
-            return  # Beende die Funktion nach erfolgreichem Login
         else:
             st.error("Ungültige E-Mail oder Passwort.")
-
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
         show_registration_page()
-
 
 def show_registration_page():
     st.title("Registrieren")
