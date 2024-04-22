@@ -40,9 +40,7 @@ def show_login_page():
             st.error("Ungültige E-Mail oder Passwort.")
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
-    if st.session_state.get("show_registration", False):
-        with st.sidebar:
-            show_registration_page()
+    
 
 def show_registration_page():
     st.title("Registrieren")
