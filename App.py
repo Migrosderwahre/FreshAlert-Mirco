@@ -103,9 +103,10 @@ def show_fresh_alert_page():
     if st.sidebar.button("Einstellungen"):
         show_settings()
 
-def display_fridge_contents():
+def show_my_fridge():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
+    init_dataframe_food()  # Daten laden
     if not st.session_state.df.empty:
         st.dataframe(st.session_state.df)
     else:
