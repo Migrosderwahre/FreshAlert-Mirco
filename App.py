@@ -21,6 +21,13 @@ def init_github():
             st.secrets["github"]["repo"],
             st.secrets["github"]["token"])
 
+def init_github_food():
+    if 'github' not in st.session_state:
+        st.session_state.github = GithubContents(
+          st.secrects["github"]["owner"],
+          st.secrets["github"]["repo"],
+          st.secrets["github"]["token"])
+
 def init_dataframe():
     """Initialize or load the dataframe."""
     if 'df' not in st.session_state:
@@ -148,6 +155,7 @@ def main():
     init_github()
     init_dataframe()
     init_dataframe_food()
+    init_github_food()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
