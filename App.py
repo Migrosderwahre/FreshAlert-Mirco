@@ -95,7 +95,6 @@ def main():
 st.title("Registrieren")
 init_github()
 init_dataframe()
-display_dataframe()
 
 
 if __name__ == "__main__":
