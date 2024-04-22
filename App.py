@@ -95,10 +95,10 @@ def main():
   else:
     show_fresh_alert_page()
 
-st.title("Registrieren")
 
 
 
 if __name__ == "__main__":
         main()
-
+        init_github()
+        init_dataframe()
