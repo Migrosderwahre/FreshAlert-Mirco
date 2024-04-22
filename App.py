@@ -7,8 +7,8 @@ DATA_FILE = "FreshAlert-Registration.csv"
 DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
 # Set constants for fridge contents
-2DATA_FILE_FOOD = "FridgeContents.csv"
-2DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"]
+DATA_FILE_FOOD = "FridgeContents.csv"
+DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"]
 
 # Set page configuration
 st.set_page_config(
@@ -39,9 +39,9 @@ def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
     if 'df_food' not in st.session_state:
         if st.session_state.github.file_exists(DATA_FILE_FOOD):
-            st.session_state.df_food = st.session_state.github.read_df(2DATA_FILE_FOOD)
+            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
-            st.session_state.df_food = pd.DataFrame(columns=2DATA_COLUMNS_FOOD)
+            st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
 def show_login_page():
     st.title("Login")
@@ -124,9 +124,9 @@ def add_food_to_fridge():
         expiry_date = st.date_input("Ablaufdatum")
         submitted = st.form_submit_button("Hinzufügen")
         if submitted:
-            new_entry = pd.DataFrame([[food_name, category, location, expiry_date]], columns=2DATA_COLUMNS_FOOD)
+            new_entry = pd.DataFrame([[food_name, category, location, expiry_date]], columns=DATA_COLUMNS_FOOD)
             st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
-            st.session_state.github.write_df(2DATA_FILE_FOOD, st.session_state.df, "Updated fridge contents")
+            st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df, "Updated fridge contents")
             st.success("Lebensmittel erfolgreich hinzugefügt!")
 
 
@@ -141,7 +141,7 @@ def save_data_to_database_login():
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
-        st.session_state.github.write_df(2DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
+        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
 def main():
     init_github()
