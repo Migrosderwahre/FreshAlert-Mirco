@@ -54,7 +54,7 @@ def show_registration_page():
 
           
     new_entry = {
-        DATA_COLUMNS[0]:  st.text_input(DATA_COLUMNS[0]), #Vorname
+        DATA_COLUMNS[0]:  st.text_input(DATA_COLUMNS[0]), #Hallo
         DATA_COLUMNS[1]:  st.text_input(DATA_COLUMNS[1]), #Nachname
         DATA_COLUMNS[2]:  st.text_input(DATA_COLUMNS[2]), # E-Mail
         DATA_COLUMNS[3]:  st.text_input(DATA_COLUMNS[3]), #Passwort
