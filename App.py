@@ -96,7 +96,6 @@ st.title("Registrieren")
 init_github()
 init_dataframe()
 display_dataframe()
-show_registration_page()
 show_login_page()
 
 
