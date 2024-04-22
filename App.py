@@ -97,8 +97,7 @@ def main():
 
 st.title("Registrieren")
 init_github()
-display_dataframe()
-show_login_page()
+
 
 
 if __name__ == "__main__":
