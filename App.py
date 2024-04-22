@@ -53,29 +53,27 @@ def show_registration_page():
     password = st.text_input("Passwort", type="password", key="register_password")
     confirm_password = st.text_input("Passwort wiederholen", type="password", key="confirm_register_password")
     # Registrierungs-Button
-  
-if st.button("Registrieren"):
+  if st.button("Registrieren"):
     if password == confirm_password:
         st.success("Registrierung erfolgreich!")
         st.session_state.show_registration = False  # Setze den Status zurück
     else:
         st.error("Die Passwörter stimmen nicht überein.")
       
-new_entry = {
-    DATA_COLUMNS[0]:  st.text_input(DATA_COLUMNS[0]), #Vorname
-    DATA_COLUMNS[1]:  st.text_input(DATA_COLUMNS[1]), #Nachname
-    DATA_COLUMNS[2]:  st.text_input(DATA_COLUMNS[2]), # E-Mail
-    DATA_COLUMNS[3]:  st.text_input(DATA_COLUMNS[3]), #Passwort
-    DATA_COLUMNS[4]:  st.text_input(DATA_COLUMNS[4]), #Passwort wiederholen
-}
+    new_entry = {
+        DATA_COLUMNS[0]:  st.text_input(DATA_COLUMNS[0]), #Vorname
+        DATA_COLUMNS[1]:  st.text_input(DATA_COLUMNS[1]), #Nachname
+        DATA_COLUMNS[2]:  st.text_input(DATA_COLUMNS[2]), # E-Mail
+        DATA_COLUMNS[3]:  st.text_input(DATA_COLUMNS[3]), #Passwort
+        DATA_COLUMNS[4]:  st.text_input(DATA_COLUMNS[4]), #Passwort wiederholen
+    }
 
-
-      for key, value in new_entry.items():
+    for key, value in new_entry.items():
         if value == "":
             st.text_input.error(f"Bitte ergänze das Feld '{key}'")
             return
 
-      if st.button("Add"):
+    if st.button("Add"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
 
@@ -83,7 +81,7 @@ new_entry = {
         name = new_entry[DATA_COLUMNS[0]]
         msg = f"Add contact '{name}' to the file {DATA_FILE}"
         st.session_state.github.write_df(DATA_FILE, st.session_state.df, msg)
-      
+
 
 
 
