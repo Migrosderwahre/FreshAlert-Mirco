@@ -95,10 +95,12 @@ def main():
   else:
     show_fresh_alert_page()
 
-
+  display_dataframe()
+  init_github()
+  init_dataframe()
 
 
 if __name__ == "__main__":
         main()
-        init_github()
-        init_dataframe()
+    
+  
