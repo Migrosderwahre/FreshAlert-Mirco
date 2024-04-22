@@ -52,14 +52,6 @@ def show_registration_page():
     password = st.text_input("Passwort", type="password", key="register_password")
     confirm_password = st.text_input("Passwort wiederholen", type="password", key="confirm_register_password")
 
-
-  
-    if st.button("Registrieren"):
-        if password == confirm_password:
-            st.success("Registrierung erfolgreich!")
-            st.session_state.show_registration = False  # Setze den Status zurück
-        else:
-            st.error("Die Passwörter stimmen nicht überein.")
           
     new_entry = {
         DATA_COLUMNS[0]:  st.text_input(DATA_COLUMNS[0]), #Vorname
@@ -78,7 +70,11 @@ def show_registration_page():
     if st.button("Add"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
-
+        if password == confirm_password:
+            st.success("Registrierung erfolgreich!")
+            st.session_state.show_registration = False  # Setze den Status zurück
+        else:
+            st.error("Die Passwörter stimmen nicht überein.")
         # Save the updated DataFrame to GitHub
         name = new_entry[DATA_COLUMNS[0]]
         msg = f"Add contact '{name}' to the file {DATA_FILE}"
