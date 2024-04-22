@@ -101,7 +101,7 @@ def main():
   else:
     show_fresh_alert_page()
 
-st.title("Mein Kontakte-App 🎂 (Woche 4)")
+st.title("Registrieren")
 init_github()
 init_dataframe()
 display_dataframe()
