@@ -2,16 +2,21 @@ import streamlit as st
 import pandas as pd
 from github_contents import GithubContents
 
-# Set constants
-DATA_FILE = "FreshAlert-Registration"
+# Set constants for user registration
+DATA_FILE = "FreshAlert-Registration.csv"
 DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
+# Set constants for fridge contents
 DATA_FILE_FOOD = "FridgeContents.csv"
 DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"]
 
 # Set page configuration
-st.set_page_config(page_title="My Contacts", page_icon="🎂", layout="wide",  
-                   initial_sidebar_state="expanded")
+st.set_page_config(
+    page_title="FreshAlert",
+    page_icon="🎂",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 def init_github():
     """Initialize the GithubContents object."""
@@ -19,17 +24,11 @@ def init_github():
         st.session_state.github = GithubContents(
             st.secrets["github"]["owner"],
             st.secrets["github"]["repo"],
-            st.secrets["github"]["token"])
-
-def init_github_food():
-    if 'github' not in st.session_state:
-        st.session_state.github = GithubContents(
-          st.secrects["github"]["owner"],
-          st.secrets["github"]["repo"],
-          st.secrets["github"]["token"])
+            st.secrets["github"]["token"]
+        )
 
 def init_dataframe():
-    """Initialize or load the dataframe."""
+    """Initialize or load the dataframe for user registration."""
     if 'df' not in st.session_state:
         if st.session_state.github.file_exists(DATA_FILE):
             st.session_state.df = st.session_state.github.read_df(DATA_FILE)
@@ -37,12 +36,12 @@ def init_dataframe():
             st.session_state.df = pd.DataFrame(columns=DATA_COLUMNS)
 
 def init_dataframe_food():
-    """Initialize or load the dataframe."""
-    if 'df' not in st.session_state:
+    """Initialize or load the dataframe for fridge contents."""
+    if 'df_food' not in st.session_state:
         if st.session_state.github.file_exists(DATA_FILE_FOOD):
-            st.session_state.df = st.session_state.github.read_df(DATA_FILE_FOOD)
+            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
         else:
-            st.session_state.df = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+            st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
 
 def show_login_page():
     st.title("Login")
@@ -86,7 +85,7 @@ def show_registration_page():
             st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
             save_data_to_database_login()
             st.success("Registrierung erfolgreich!")
-            st.session_state.show_registration = False  # Setze den Status zurück
+            st.session_state.show_registration = False  # Reset status
         else:
             st.error("Die Passwörter stimmen nicht überein.")
 
@@ -97,31 +96,21 @@ def show_fresh_alert_page():
     if st.sidebar.button("Mein Kühlschrank"):
         show_my_fridge()
     if st.sidebar.button("Neues Lebensmittel hinzufügen"):
-        add_new_food()
-    st.sidebar.markdown("---")  # Trennlinie
+        add_food_to_fridge()
+    st.sidebar.markdown("---")  # Separator
     if st.sidebar.button("Freunde einladen"):
         show_my_friends()
     if st.sidebar.button("Einstellungen"):
         show_settings()
-def show_frige_page():
-    st.title("Essen yeah")
-           
-    new_entry = {
-        DATA_COLUMNS_FOOD[0]: st.text_input(DATA_COLUMNS_FOOD[0]), #Lebensmittel
-        DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Kategorie
-        DATA_COLUMNS_FOOD[2]: st.text_input(DATA_COLUMNS_FOOD[2]), # Lagerort
-        DATA_COLUMNS_FOOD[3]: st.text_input(DATA_COLUMNS_FOOD[3]), # Ablaufdatum
-    }
-def display_fridge_contents():
-    """Display the contents of the fridge."""
+
+def show_my_fridge():
     st.title("Mein Kühlschrank")
-    if not st.session_state.df.empty:
-        st.dataframe(st.session_state.df)
+    if not st.session_state.df_food.empty:
+        st.dataframe(st.session_state.df_food)
     else:
         st.write("Der Kühlschrank ist leer.")
-      
+
 def add_food_to_fridge():
-    """Add a new food item to the fridge."""
     st.title("Neues Lebensmittel hinzufügen")
     with st.form("new_food_form"):
         st.write("Füllen Sie die folgenden Felder aus:")
@@ -132,8 +121,8 @@ def add_food_to_fridge():
         submitted = st.form_submit_button("Hinzufügen")
         if submitted:
             new_entry = pd.DataFrame([[food_name, category, location, expiry_date]], columns=DATA_COLUMNS_FOOD)
-            st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
-            st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated fridge contents")
+            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry], ignore_index=True)
+            st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated fridge contents")
             st.success("Lebensmittel erfolgreich hinzugefügt!")
 
 def show_my_friends():
@@ -143,19 +132,16 @@ def show_settings():
     st.write("Einstellungen")
 
 def save_data_to_database_login():
-    # Speichere die aktualisierte DataFrame in der Datenbank
     st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated registration data")
 
 def save_data_to_database_food():
-    # Speichern Sie die Daten in der Datenbank
     if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated food data")
+        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
 def main():
     init_github()
     init_dataframe()
     init_dataframe_food()
-    init_github_food()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
@@ -163,8 +149,7 @@ def main():
         show_login_page()
     else:
         show_fresh_alert_page()
-        add_food_to_fridge()
-        display_fridge_contents()
 
 if __name__ == "__main__":
     main()
+
