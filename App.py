@@ -97,16 +97,18 @@ def is_user_logged_in():
 
 def main():
    if not is_user_logged_in():
-        show_login_page()
-    else:
-        show_fresh_alert_page()
-    st.title("Mein Kontakte-App 🎂 (Woche 4)")
-    init_github()
-    init_dataframe()
-    add_entry_in_sidebar()
-    display_dataframe()
-    show_registration_page()
     show_login_page()
+else:
+    show_fresh_alert_page()
+
+st.title("Mein Kontakte-App 🎂 (Woche 4)")
+init_github()
+init_dataframe()
+add_entry_in_sidebar()
+display_dataframe()
+show_registration_page()
+show_login_page()
+
 
 if __name__ == "__main__":
         main()
