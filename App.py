@@ -34,7 +34,7 @@ def add_entry_in_sidebar():
         DATA_COLUMNS[0]:  st.sidebar.text_input(DATA_COLUMNS[0]),  # Vorname
         DATA_COLUMNS[1]:  st.sidebar.text_input(DATA_COLUMNS[1]),  # Nachname
         DATA_COLUMNS[2]:  st.sidebar.text_input(DATA_COLUMNS[2]),
-        DATA_COLUMNS[3]:  st.sidebar.date_input(DATA_COLUMNS[3]),
+        DATA_COLUMNS[3]:  st.sidebar.date_input(DATA_COLUMNS[3],
                                                 min_value=date(2024, 1, 1),
                                                 format="DD.MM.YYYY"),  # Geburtsdatum
     } 
