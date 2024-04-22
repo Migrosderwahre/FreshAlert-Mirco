@@ -61,7 +61,7 @@ def show_registration_page():
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
 
-    if st.button("Add"):
+    if st.button("Registrieren"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
         if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
