@@ -29,6 +29,14 @@ def init_dataframe():
         else:
             st.session_state.df = pd.DataFrame(columns=DATA_COLUMNS)
 
+def init_dataframe_food():
+    """Initialize or load the dataframe."""
+    if 'df' not in st.session_state:
+        if st.session_state.github.file_exists(DATA_FILE_FOOD):
+            st.session_state.df = st.session_state.github.read_df(DATA_FILE_FOOD)
+        else:
+            st.session_state.df = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+
 def show_login_page():
     st.title("Login")
     email = st.text_input("E-Mail", key="login_email")
@@ -139,8 +147,7 @@ def save_data_to_database_food():
 def main():
     init_github()
     init_dataframe()
-    add_food_to_fridge()
-    display_fridge_contents()
+    init_dataframe_food()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
@@ -148,6 +155,8 @@ def main():
         show_login_page()
     else:
         show_fresh_alert_page()
+        add_food_to_fridge()
+        display_fridge_contents()
 
 if __name__ == "__main__":
     main()
