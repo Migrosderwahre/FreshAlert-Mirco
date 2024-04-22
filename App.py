@@ -41,8 +41,8 @@ def show_login_page():
     if st.button("Registrieren", key="registration_button"):
         st.session_state.show_registration = True
     if st.session_state.get("show_registration", False):
+        with st.sidebar:
             show_registration_page()
-    
 
 def show_registration_page():
     st.title("Registrieren")
@@ -54,24 +54,22 @@ def show_registration_page():
         DATA_COLUMNS[3]:  st.text_input(DATA_COLUMNS[3],type="password"), #Passwort
         DATA_COLUMNS[4]:  st.text_input(DATA_COLUMNS[4], type="password"), #Passwort wiederholen
     }
-    
+
 
     for key, value in new_entry.items():
         if value == "":
             st.error(f"Bitte ergänze das Feld '{key}'")
             return
 
-    if st.button("Registrieren"):
-          new_entry_df = pd.DataFrame([new_entry])
-          st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
-    
-    if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
-        st.success("Registrierung erfolgreich!")
-        st.session_state.show_registration = False  # Setze den Status zurück
-    else:
-        st.error("Die Passwörter stimmen nicht überein.")
-
-          # Save the updated DataFrame to GitHub
+    if st.button("Add"):
+        new_entry_df = pd.DataFrame([new_entry])
+        st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
+        if password == confirm_password:
+            st.success("Registrierung erfolgreich!")
+            st.session_state.show_registration = False  # Setze den Status zurück
+        else:
+            st.error("Die Passwörter stimmen nicht überein.")
+        # Save the updated DataFrame to GitHub
         name = new_entry[DATA_COLUMNS[0]]
         msg = f"Add contact '{name}' to the file {DATA_FILE}"
         st.session_state.github.write_df(DATA_FILE, st.session_state.df, msg)
@@ -94,12 +92,13 @@ def main():
   else:
     show_fresh_alert_page()
 
-  display_dataframe()
-  init_github()
-  init_dataframe()
+st.title("Registrieren")
+init_github()
+init_dataframe()
+display_dataframe()
+show_registration_page()
+show_login_page()
 
 
 if __name__ == "__main__":
         main()
-    
-  
