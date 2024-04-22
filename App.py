@@ -6,6 +6,9 @@ from github_contents import GithubContents
 DATA_FILE = "FreshAlert-Registration"
 DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
+DATA_FILE_FOOD = "FridgeContents.csv"
+DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"]
+
 # Set page configuration
 st.set_page_config(page_title="My Contacts", page_icon="🎂", layout="wide",  
                    initial_sidebar_state="expanded")
@@ -86,36 +89,29 @@ def show_fresh_alert_page():
     if st.sidebar.button("Einstellungen"):
         show_settings()
 
-def show_my_fridge():
+def display_fridge_contents():
+    """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
-    if "my_fridge" in st.session_state and not st.session_state.my_fridge.empty:
-        st.write(st.session_state.my_fridge)
+    if not st.session_state.df.empty:
+        st.dataframe(st.session_state.df)
     else:
-        st.write("Noch keine Lebensmittel hinzugefügt.")
-
-def add_new_food():
+        st.write("Der Kühlschrank ist leer.")
+      
+def add_food_to_fridge():
+    """Add a new food item to the fridge."""
     st.title("Neues Lebensmittel hinzufügen")
     with st.form("new_food_form"):
         st.write("Füllen Sie die folgenden Felder aus:")
-        food_name = st.text_input("Lebensmittel", key="food_name")
-        category = st.selectbox("Kategorie", ["Bitte wählen","Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"], key="food_category")
-        location = st.selectbox("Lagerort", ["Bitte wählen","Schrank", "Kühlschrank", "Tiefkühler", "offen"], key="food_location")
-        expiry_date = st.date_input("Ablaufdatum", key="food_expiry_date")
+        food_name = st.text_input("Lebensmittel")
+        category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
+        location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])
+        expiry_date = st.date_input("Ablaufdatum")
         submitted = st.form_submit_button("Hinzufügen")
-        
         if submitted:
-            new_entry = {
-                "Lebensmittel": food_name,
-                "Kategorie": category,
-                "Lagerort": location,
-                "Ablaufdatum": expiry_date
-            }
-            if "my_fridge" not in st.session_state:
-                st.session_state.my_fridge = pd.DataFrame(columns=["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"])
-            st.session_state.my_fridge = st.session_state.my_fridge.append(pd.Series(new_entry), ignore_index=True)
-            st.write(st.session_state.my_fridge)  # Zum Debuggen: Zeigen Sie den aktualisierten Kühlschrank an
-
-
+            new_entry = pd.DataFrame([[food_name, category, location, expiry_date]], columns=DATA_COLUMNS)
+            st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
+            st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated fridge contents")
+            st.success("Lebensmittel erfolgreich hinzugefügt!")
 
 def show_my_friends():
     st.write("Meine Freunde")
@@ -135,8 +131,8 @@ def save_data_to_database_food():
 def main():
     init_github()
     init_dataframe()
-    add_new_food()
-    show_my_fridge()
+    add_food_to_fridge()
+    display_fridge_contents()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
