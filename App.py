@@ -92,7 +92,6 @@ def main():
   else:
     show_fresh_alert_page()
 
-st.title("Registrieren")
 init_github()
 init_dataframe()
 
