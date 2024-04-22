@@ -69,16 +69,6 @@ def show_registration_page():
     else:
         st.error("Die Passwörter stimmen nicht überein.")
 
-
-
-
-
-
-
-
-
-      
-
           # Save the updated DataFrame to GitHub
         name = new_entry[DATA_COLUMNS[0]]
         msg = f"Add contact '{name}' to the file {DATA_FILE}"
