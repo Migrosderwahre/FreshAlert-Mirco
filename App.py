@@ -146,7 +146,6 @@ def main():
     if not st.session_state.user_logged_in:
         show_login_page()
     else:
-        st.title("Willkommen!")
         show_fresh_alert_page()
         
      
