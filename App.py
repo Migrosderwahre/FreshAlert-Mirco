@@ -45,20 +45,21 @@ def show_login_page():
             show_registration_page()
 
 
-    def show_registration_page():
+def show_registration_page():
     st.title("Registrieren")
     first_name = st.text_input("Vorname", key="register_first_name")
     last_name = st.text_input("Nachname", key="register_last_name")
     email = st.text_input("E-Mail", key="register_email")
     password = st.text_input("Passwort", type="password", key="register_password")
     confirm_password = st.text_input("Passwort wiederholen", type="password", key="confirm_register_password")
-   # Registrierungs-Button
+    # Registrierungs-Button
     if st.button("Registrieren"):
         if password == confirm_password:
             st.success("Registrierung erfolgreich!")
             st.session_state.show_registration = False  # Setze den Status zurück
         else:
             st.error("Die Passwörter stimmen nicht überein.")
+
 
       new_entry = {
         DATA_COLUMNS[0]:  st.text_input(DATA_COLUMNS[0]), #Vorname
