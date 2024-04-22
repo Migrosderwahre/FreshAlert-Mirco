@@ -99,7 +99,7 @@ def main():
     show_login_page()
   else:
     st.title("Willkommen!")
-        display_dataframe()
+    display_dataframe()
 
 init_github()
 init_dataframe()
