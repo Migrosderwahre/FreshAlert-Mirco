@@ -4,8 +4,8 @@ from datetime import date
 from github_contents import GithubContents
 
 # Set constants
-DATA_FILE = "MyContactsTable.csv"
-DATA_COLUMNS = ["Name", "Strasse", "PLZ", "Ort", "Geburtsdatum"]
+DATA_FILE = "FreshAlert"
+DATA_COLUMNS = ["Vorname", "Nachname", "Passwort", "Logindatum"]
 
 # Set page configuration
 st.set_page_config(page_title="My Contacts", page_icon="🎂", layout="wide",  
@@ -14,7 +14,7 @@ st.set_page_config(page_title="My Contacts", page_icon="🎂", layout="wide",
 def init_github():
     """Initialize the GithubContents object."""
     if 'github' not in st.session_state:
-        st.session_state.github = GithubContents( 
+        st.session_state.github = GithubContents(
             st.secrets["github"]["owner"],
             st.secrets["github"]["repo"],
             st.secrets["github"]["token"])
@@ -31,12 +31,11 @@ def init_dataframe():
 def add_entry_in_sidebar():
     """Add a new entry to the DataFrame using pd.concat and calculate age."""
     new_entry = {
-        DATA_COLUMNS[0]:  st.sidebar.text_input(DATA_COLUMNS[0]),  # Name
-        DATA_COLUMNS[1]:  st.sidebar.text_input(DATA_COLUMNS[1]),  # Strasse
-        DATA_COLUMNS[2]:  st.sidebar.text_input(DATA_COLUMNS[2]),  # PLZ
-        DATA_COLUMNS[3]:  st.sidebar.text_input(DATA_COLUMNS[3]),  # Ort
-        DATA_COLUMNS[4]:  st.sidebar.date_input(DATA_COLUMNS[4],
-                                                min_value=date(1950, 1, 1),
+        DATA_COLUMNS[0]:  st.sidebar.text_input(DATA_COLUMNS[0]),  # Vorname
+        DATA_COLUMNS[1]:  st.sidebar.text_input(DATA_COLUMNS[1]),  # Nachname
+        DATA_COLUMNS[2]:  st.sidebar.text_input(DATA_COLUMNS[2]
+        DATA_COLUMNS[3]:  st.sidebar.date_input(DATA_COLUMNS[3],
+                                                min_value=date(2024, 1, 1),
                                                 format="DD.MM.YYYY"),  # Geburtsdatum
     } 
 
@@ -68,6 +67,6 @@ def main():
     init_dataframe()
     add_entry_in_sidebar()
     display_dataframe()
-
+  
 if __name__ == "__main__":
     main()
