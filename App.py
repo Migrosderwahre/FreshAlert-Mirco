@@ -6,7 +6,6 @@ from github_contents import GithubContents
 DATA_FILE = "FreshAlert-Registration"
 DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederholen"]
 
-
 # Set page configuration
 st.set_page_config(page_title="My Contacts", page_icon="🎂", layout="wide",  
                    initial_sidebar_state="expanded")
@@ -128,18 +127,13 @@ def save_data_to_database_login():
     st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated registration data")
 
 def save_data_to_database_food():
-  # Speichern Sie die Daten in der Datenbank
+    # Speichern Sie die Daten in der Datenbank
     if 'github' in st.session_state:
         st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated contact data")
 
-def display_dataframe():
-    """Display the DataFrame in the app."""
-    if not st.session_state.df.empty:
-        st.dataframe(st.session_state.df)
-    else:
-        st.write("No data to display.")
-
 def main():
+    init_github()
+    init_dataframe()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
@@ -147,9 +141,6 @@ def main():
         show_login_page()
     else:
         show_fresh_alert_page()
-        
-     
 
-init_github()
-init_dataframe()
-main()
+if __name__ == "__main__":
+    main()
