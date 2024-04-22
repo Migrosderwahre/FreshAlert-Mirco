@@ -46,19 +46,13 @@ def show_login_page():
 
 def show_registration_page():
     st.title("Registrieren")
-    first_name = st.text_input("Vorname", key="register_first_name")
-    last_name = st.text_input("Nachname", key="register_last_name")
-    email = st.text_input("E-Mail", key="register_email")
-    password = st.text_input("Passwort", type="password", key="register_password")
-    confirm_password = st.text_input("Passwort wiederholen", type="password", key="confirm_register_password")
-
-          
+           
     new_entry = {
-        DATA_COLUMNS[0]:  st.text_input(DATA_COLUMNS[0]), #Hallo
+        DATA_COLUMNS[0]:  st.text_input(DATA_COLUMNS[0]), #Vorname
         DATA_COLUMNS[1]:  st.text_input(DATA_COLUMNS[1]), #Nachname
         DATA_COLUMNS[2]:  st.text_input(DATA_COLUMNS[2]), # E-Mail
-        DATA_COLUMNS[3]:  st.text_input(DATA_COLUMNS[3]), #Passwort
-        DATA_COLUMNS[4]:  st.text_input(DATA_COLUMNS[4]), #Passwort wiederholen
+        DATA_COLUMNS[3]:  st.text_input(DATA_COLUMNS[3],type="password"), #Passwort
+        DATA_COLUMNS[4]:  st.text_input(DATA_COLUMNS[4], type="password"), #Passwort wiederholen
     }
 
 
