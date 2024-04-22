@@ -14,7 +14,7 @@ st.set_page_config(page_title="My Contacts", page_icon="🎂", layout="wide",
 def init_github():
     """Initialize the GithubContents object."""
     if 'github' not in st.session_state:
-        st.session_state.github = GithubContents(
+        st.session_state.github = GithubContents( 
             st.secrets["github"]["owner"],
             st.secrets["github"]["repo"],
             st.secrets["github"]["token"])
