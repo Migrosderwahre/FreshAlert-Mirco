@@ -62,10 +62,10 @@ def show_registration_page():
     if st.button("Registrieren"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
-         if password == confirm_password:
+        if password == confirm_password:
             st.success("Registrierung erfolgreich!")
             st.session_state.show_registration = False  # Setze den Status zurück
-         else:
+        else:
             st.error("Die Passwörter stimmen nicht überein.")
         # Save the updated DataFrame to GitHub
         name = new_entry[DATA_COLUMNS[0]]
