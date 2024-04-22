@@ -44,6 +44,7 @@ def show_login_page():
         with st.sidebar:
             show_registration_page()
 
+
   def show_registration_page():
     st.title("Registrieren")
     first_name = st.text_input("Vorname", key="register_first_name_input")
