@@ -52,7 +52,7 @@ def show_registration_page():
         DATA_COLUMNS[3]:  st.text_input(DATA_COLUMNS[3],type="password"), #Passwort
         DATA_COLUMNS[4]:  st.text_input(DATA_COLUMNS[4], type="password"), #Passwort wiederholen
     }
-
+    
 
     for key, value in new_entry.items():
         if value == "":
@@ -62,7 +62,7 @@ def show_registration_page():
     if st.button("Registrieren"):
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
-        if password == confirm_password:
+        if  DATA_COLUMNS[3] ==  DATA_COLUMNS[4]:
             st.success("Registrierung erfolgreich!")
             st.session_state.show_registration = False  # Setze den Status zurück
         else:
