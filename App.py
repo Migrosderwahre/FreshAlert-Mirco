@@ -103,14 +103,17 @@ def show_fresh_alert_page():
     if st.sidebar.button("Einstellungen"):
         show_settings()
 
-def show_my_fridge():
+def display_fridge_contents():
+    """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
-    if not st.session_state.df_food.empty:
-        st.dataframe(st.session_state.df_food)
+    if not st.session_state.df.empty:
+        st.dataframe(st.session_state.df)
     else:
         st.write("Der Kühlschrank ist leer.")
 
+
 def add_food_to_fridge():
+    """Add a new food item to the fridge."""
     st.title("Neues Lebensmittel hinzufügen")
     with st.form("new_food_form"):
         st.write("Füllen Sie die folgenden Felder aus:")
@@ -121,9 +124,10 @@ def add_food_to_fridge():
         submitted = st.form_submit_button("Hinzufügen")
         if submitted:
             new_entry = pd.DataFrame([[food_name, category, location, expiry_date]], columns=DATA_COLUMNS_FOOD)
-            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry], ignore_index=True)
-            st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated fridge contents")
+            st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
+            st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df, "Updated fridge contents")
             st.success("Lebensmittel erfolgreich hinzugefügt!")
+
 
 def show_my_friends():
     st.write("Meine Freunde")
