@@ -89,7 +89,7 @@ def save_data_to_database_login():
 def main():
     init_github()
     init_dataframe()
-     if 'user_logged_in' not in st.session_state:
+    if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
 
     if not st.session_state.user_logged_in:
