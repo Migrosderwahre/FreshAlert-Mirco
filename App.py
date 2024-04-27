@@ -8,12 +8,12 @@ DATA_COLUMNS = ["Vorname", "Nachname", "E-Mail", "Passwort", "Passwort wiederhol
 
 # Set constants for fridge contents
 DATA_FILE_FOOD = "FridgeContents.csv"
-DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum"]
+DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "Standort"]
 
 # Set page configuration
 st.set_page_config(
     page_title="FreshAlert",
-    page_icon="🎂",
+    page_icon="🗄️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -27,13 +27,13 @@ def init_github():
             st.secrets["github"]["token"]
         )
 
-def init_dataframe():
+def init_dataframe_login():
     """Initialize or load the dataframe for user registration."""
     if 'df' not in st.session_state:
         if st.session_state.github.file_exists(DATA_FILE):
-            st.session_state.df = st.session_state.github.read_df(DATA_FILE)
+            st.session_state.df_login = st.session_state.github.read_df(DATA_FILE)
         else:
-            st.session_state.df = pd.DataFrame(columns=DATA_COLUMNS)
+            st.session_state.df_login = pd.DataFrame(columns=DATA_COLUMNS)
 
 def init_dataframe_food():
     """Initialize or load the dataframe for fridge contents."""
@@ -49,7 +49,7 @@ def show_login_page():
     password = st.text_input("Passwort", type="password", key="login_password")
     if st.button("Login"):
         login_successful = False
-        for index, row in st.session_state.df.iterrows():
+        for index, row in st.session_state.df_login.iterrows():
             if row["E-Mail"] == email and row["Passwort"] == password:
                 login_successful = True
                 break
@@ -82,19 +82,61 @@ def show_registration_page():
     if st.button("Registrieren"):
         if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
             new_entry_df = pd.DataFrame([new_entry])
-            st.session_state.df = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
+            st.session_state.df_login = pd.concat([st.session_state.df_login, new_entry_df], ignore_index=True)
             save_data_to_database_login()
             st.success("Registrierung erfolgreich!")
             st.session_state.show_registration = False  # Reset status
         else:
             st.error("Die Passwörter stimmen nicht überein.")
 
+def show_my_fridge_page():
+    """Display the contents of the fridge."""
+    st.title("Mein Kühlschrank")
+    init_dataframe_food()  # Daten laden
+    
+    if not st.session_state.df_food.empty:
+        st.dataframe(st.session_state.df_food)
+    else:
+        st.write("Der Kühlschrank ist leer.")
+
+
+def show_my_fridge():
+    st.title("Lebensmittel hinzufügen")
+           
+    new_entry = {
+        DATA_COLUMNS_FOOD[0]: st.text_input(DATA_COLUMNS_FOOD[0]), #Lebensmittel
+        DATA_COLUMNS_FOOD[1]: st.text_input(DATA_COLUMNS_FOOD[1]), #Kategorie
+        DATA_COLUMNS_FOOD[2]: st.text_input(DATA_COLUMNS_FOOD[2]), # Lagerort
+        DATA_COLUMNS_FOOD[3]: st.text_input(DATA_COLUMNS_FOOD[3], type="date"), #Ablaufdatum
+        DATA_COLUMNS_FOOD[4]: st.text_input(DATA_COLUMNS_FOOD[4],), #Standort
+    }
+
+    for key, value in new_entry.items():
+        if value == "":
+            st.error(f"Bitte ergänze das Feld '{key}'")
+            return
+
+    if st.button("hinzufügen"):
+        if new_entry["Passwort"] == new_entry["Passwort wiederholen"]:
+            new_entry_df = pd.DataFrame([new_entry])
+            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_df], ignore_index=True)
+            save_data_to_database_food()
+            st.success("Registrierung erfolgreich!")
+            st.session_state.show_my_fridge_page = False  # Reset status
+        else:
+            st.error("Die Passwörter stimmen nicht überein.")
+
+
 def show_fresh_alert_page():
     st.title("FreshAlert")
+    st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
+"Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
+"Wir werden dich daran erinnen, es rechtzeitig zu benutzen und dir so helfen keine Lebensmittel mehr zu verschwenden. "
+"#StopFoodwaste ")
     st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
     st.sidebar.title("")
     if st.sidebar.button("Mein Kühlschrank"):
-        show_my_fridge()
+        show_my_fridge_page()
     if st.sidebar.button("Neues Lebensmittel hinzufügen"):
         add_food_to_fridge()
     st.sidebar.markdown("---")  # Separator
@@ -103,31 +145,40 @@ def show_fresh_alert_page():
     if st.sidebar.button("Einstellungen"):
         show_settings()
 
-def show_my_fridge():
-    """Display the contents of the fridge."""
-    st.title("Mein Kühlschrank")
+
+
+def add_food_to_fridge():
+    st.title("Neues Lebensmittel hinzufügen")
     init_dataframe_food()  # Daten laden
-    if not st.session_state.df.empty:
-        st.dataframe(st.session_state.df)
+
+    food_name = st.text_input("Lebensmittel")
+    category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
+    location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])
+    area = st.selectbox("Standort", ["Mein Kühlschrank", "geteilter Kühlschrank"])
+    expiry_date = st.date_input("Ablaufdatum")
+
+    if st.button("Lebensmittel hinzufügen"):
+        if food_name and category and location and area and expiry_date:
+            new_entry_food = pd.DataFrame([[food_name, category, location, expiry_date, area]], columns=DATA_COLUMNS_FOOD)
+            new_df = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
+            st.session_state.df_food = new_df
+            save_data_to_database_food()
+            st.success("Lebensmittel erfolgreich hinzugefügt!")
+            st.write(new_df)
+        else:
+            st.error("Bitte füllen Sie alle Felder aus.")
+
+    if not st.session_state.df_food.empty:
+        st.subheader("Aktuelle Lebensmittel im Kühlschrank")
+        st.dataframe(st.session_state.df_food)
     else:
         st.write("Der Kühlschrank ist leer.")
 
 
-def add_food_to_fridge():
-    """Add a new food item to the fridge."""
-    st.title("Neues Lebensmittel hinzufügen")
-    with st.form("new_food_form"):
-        st.write("Füllen Sie die folgenden Felder aus:")
-        food_name = st.text_input("Lebensmittel")
-        category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
-        location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])
-        expiry_date = st.date_input("Ablaufdatum")
-        submitted = st.form_submit_button("Hinzufügen")
-        if submitted:
-            new_entry = pd.DataFrame([[food_name, category, location, expiry_date]], columns=DATA_COLUMNS_FOOD)
-            st.session_state.df = pd.concat([st.session_state.df, new_entry], ignore_index=True)
-            st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df, "Updated fridge contents")
-            st.success("Lebensmittel erfolgreich hinzugefügt!")
+
+def save_data_to_database_food():
+    if 'github' in st.session_state:
+        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
 
 
 def show_my_friends():
@@ -136,8 +187,9 @@ def show_my_friends():
 def show_settings():
     st.write("Einstellungen")
 
+
 def save_data_to_database_login():
-    st.session_state.github.write_df(DATA_FILE, st.session_state.df, "Updated registration data")
+    st.session_state.github.write_df(DATA_FILE, st.session_state.df_login, "Updated registration data")
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
@@ -145,7 +197,7 @@ def save_data_to_database_food():
 
 def main():
     init_github()
-    init_dataframe()
+    init_dataframe_login()
     init_dataframe_food()
     if 'user_logged_in' not in st.session_state:
         st.session_state.user_logged_in = False
@@ -157,4 +209,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
