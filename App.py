@@ -64,15 +64,6 @@ def show_my_fridge():
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
 
-    # Überprüfen, ob das Formular bereits ausgefüllt wurde
-    if 'form_filled' not in st.session_state:
-        st.session_state.form_filled = False
-
-    # Wenn das Formular bereits ausgefüllt wurde, zeigen Sie eine Erfolgsmeldung an
-    if st.session_state.form_filled:
-        st.success("Lebensmittel erfolgreich hinzugefügt!")
-        return
-
     new_entry = {
         DATA_COLUMNS[0]: st.text_input(DATA_COLUMNS[0]), #Lebensmittel
         DATA_COLUMNS[1]: st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"]), #Kategorie
@@ -90,10 +81,11 @@ def add_food_to_fridge():
         new_entry_df = pd.DataFrame([new_entry])
         st.session_state.df_food = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
         save_data_to_database_food()
-        st.session_state.form_filled = True  # Markieren Sie das Formular als ausgefüllt
+        st.success("Lebensmittel erfolgreich hinzugefügt!")
 
     st.subheader("Neues Lebensmittel")
     st.write(new_entry)
+
 
 
 
