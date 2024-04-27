@@ -82,6 +82,11 @@ def add_food_to_fridge():
         st.session_state.df_food = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
         save_data_to_database_food()
         st.success("Lebensmittel erfolgreich hinzugefügt!")
+        return
+
+    st.subheader("Neues Lebensmittel")
+    st.write(new_entry)
+
 
 
 
