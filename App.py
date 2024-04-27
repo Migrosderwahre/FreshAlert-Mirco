@@ -24,7 +24,7 @@ def init_github():
         )
 
 
-def init_dataframe():
+def init_dataframe_food():
     """Initialize or load the dataframe for user registration."""
     if 'df' not in st.session_state:
         if st.session_state.github.file_exists(DATA_FILE):
@@ -51,65 +51,44 @@ def show_fresh_alert_page():
         show_settings()
 
 
-
-def show_my_fridge_page():
+def show_my_fridge():
     """Display the contents of the fridge."""
     st.title("Mein Kühlschrank")
     init_dataframe_food()  # Daten laden
-    
-    if not st.session_state.df_food.empty:
-        st.dataframe(st.session_state.df_food)
+    if not st.session_state.df.empty:
+        st.dataframe(st.session_state.df)
     else:
         st.write("Der Kühlschrank ist leer.")
 
 
 def add_food_to_fridge():
     st.title("Neues Lebensmittel hinzufügen")
-    init_dataframe_food()  # Daten laden
+           
+    new_entry = {
+        DATA_COLUMNS[0]: st.text_input(DATA_COLUMNS[0]), #Lebensmittel
+        DATA_COLUMNS[1]: st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])(DATA_COLUMNS[1]), #Kategorie
+        DATA_COLUMNS[2]: st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])(DATA_COLUMNS[2]), # Location
+        DATA_COLUMNS[3]: st.selectbox("Standort", ["Mein Kühlschrank", "geteilter Kühlschrank"])(DATA_COLUMNS[3]), #area
+        DATA_COLUMNS[4]: st.date.input(DATA_COLUMNS[4]), #Ablaufdatum
+    }
 
-    food_name = st.text_input("Lebensmittel")
-    category = st.selectbox("Kategorie", ["Gemüse", "Obst", "Milchprodukte", "Fleisch", "Fisch", "Eier", "Getränke", "Saucen", "Getreideprodukte", "Tiefkühlprodukte"])
-    location = st.selectbox("Lagerort", ["Schrank", "Kühlschrank", "Tiefkühler", "offen"])
-    area = st.selectbox("Standort", ["Mein Kühlschrank", "geteilter Kühlschrank"])
-    expiry_date = st.date_input("Ablaufdatum")
+    for key, value in new_entry.items():
+        if value == "":
+            st.error(f"Bitte ergänze das Feld '{key}'")
+            return
 
-    if st.button("Lebensmittel hinzufügen"):
-        if food_name and category and location and area and expiry_date:
-            new_entry_food = pd.DataFrame([[food_name, category, location, expiry_date, area]], columns=DATA_COLUMNS_FOOD)
-            st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
-            save_data_to_database_food()
-            st.success("Lebensmittel erfolgreich hinzugefügt!")
-        else:
-            st.error("Bitte füllen Sie alle Felder aus.")
-
-    st.subheader("Aktuelle Lebensmittel im Kühlschrank")
-    if not st.session_state.df_food.empty:
-        st.dataframe(st.session_state.df_food)
+    if st.button("Registrieren"):
+        new_entry_df = pd.DataFrame([new_entry])
+        st.session_state.df_food = pd.concat([st.session_state.df, new_entry_df], ignore_index=True)
+        save_data_to_database_food()
+        st.success("Lebensmittel erfolgreich hinzugefügt!")
 
 
 
 def save_data_to_database_food():
     if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE_FOOD, st.session_state.df_food, "Updated food data")
+        st.session_state.github.write_df(DATA_FILE, st.session_state.df_food, "Updated food data")
 
-
-def show_fresh_alert_page():
-    st.title("FreshAlert")
-    st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
-                 "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
-                 "Wir werden dich daran erinneren, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
-                 "#StopFoodwaste ")
-    st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
-    st.sidebar.title("")
-    if st.sidebar.button("Mein Kühlschrank"):
-        show_my_fridge_page()
-    if st.sidebar.button("Neues Lebensmittel hinzufügen"):
-        add_food_to_fridge()
-    st.sidebar.markdown("---")  # Separator
-    if st.sidebar.button("Freunde einladen"):
-        show_my_friends()
-    if st.sidebar.button("Einstellungen"):
-        show_settings()
 
 
 def show_my_friends():
