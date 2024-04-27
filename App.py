@@ -3,8 +3,8 @@ import pandas as pd
 from github_contents import GithubContents
 
 # Set constants for fridge contents
-DATA_FILE_FOOD = "FridgeContents.csv"
-DATA_COLUMNS_FOOD = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "Standort"]
+DATA_FILE = "Kühlschrankinhalt.csv"
+DATA_COLUMNS = ["Lebensmittel", "Kategorie", "Lagerort", "Ablaufdatum", "Standort"]
 
 # Set page configuration
 st.set_page_config(
@@ -24,13 +24,32 @@ def init_github():
         )
 
 
-def init_dataframe_food():
-    """Initialize or load the dataframe for fridge contents."""
-    if 'df_food' not in st.session_state:
-        if st.session_state.github.file_exists(DATA_FILE_FOOD):
-            st.session_state.df_food = st.session_state.github.read_df(DATA_FILE_FOOD)
+def init_dataframe():
+    """Initialize or load the dataframe for user registration."""
+    if 'df' not in st.session_state:
+        if st.session_state.github.file_exists(DATA_FILE):
+            st.session_state.df = st.session_state.github.read_df(DATA_FILE)
         else:
-            st.session_state.df_food = pd.DataFrame(columns=DATA_COLUMNS_FOOD)
+            st.session_state.df = pd.DataFrame(columns=DATA_COLUMNS)
+
+def show_fresh_alert_page():
+    st.title("FreshAlert")
+    st.subheader("Herzlich Willkommen bei FreshAlert. Deine App für deine Lebensmittel! "            
+                 "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
+                 "Wir werden dich daran erinneren, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
+                 "#StopFoodwaste ")
+    st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
+    st.sidebar.title("")
+    if st.sidebar.button("Mein Kühlschrank"):
+        show_my_fridge_page()
+    if st.sidebar.button("Neues Lebensmittel hinzufügen"):
+        add_food_to_fridge()
+    st.sidebar.markdown("---")  # Separator
+    if st.sidebar.button("Freunde einladen"):
+        show_my_friends()
+    if st.sidebar.button("Einstellungen"):
+        show_settings()
+
 
 
 def show_my_fridge_page():
