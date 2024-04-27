@@ -37,16 +37,16 @@ def show_fresh_alert_page():
                  "Füge links deine ersten Lebensmittel zu deinem Digitalen Kühlschrank hinzu. "
                  "Wir werden dich daran erinnern, es rechtzeitig zu benutzen und dir so helfen, keine Lebensmittel mehr zu verschwenden. "
                  "#StopFoodwaste ")
-    st.sidebar.image('18-04-_2024_11-16-47.png', use_column_width=True)
-    st.sidebar.title("")
-    if st.sidebar.button("Mein Kühlschrank"):
+
+    page = st.sidebar.selectbox("Navigation", ["Mein Kühlschrank", "Neues Lebensmittel hinzufügen", "Freunde einladen", "Einstellungen"])
+
+    if page == "Mein Kühlschrank":
         show_my_fridge_page()
-    if st.sidebar.button("Neues Lebensmittel hinzufügen"):
+    elif page == "Neues Lebensmittel hinzufügen":
         add_food_to_fridge()
-    st.sidebar.markdown("---")  # Separator
-    if st.sidebar.button("Freunde einladen"):
+    elif page == "Freunde einladen":
         show_my_friends()
-    if st.sidebar.button("Einstellungen"):
+    elif page == "Einstellungen":
         show_settings()
 
 def show_my_fridge_page():
