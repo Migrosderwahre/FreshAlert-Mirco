@@ -60,12 +60,11 @@ def add_food_to_fridge():
             st.session_state.df_food = pd.concat([st.session_state.df_food, new_entry_food], ignore_index=True)
             save_data_to_database_food()
             st.success("Lebensmittel erfolgreich hinzugefügt!")
-            st.write(st.session_state.df_food)  # Anzeige des aktualisierten DataFrame
         else:
             st.error("Bitte füllen Sie alle Felder aus.")
 
+    st.subheader("Aktuelle Lebensmittel im Kühlschrank")
     if not st.session_state.df_food.empty:
-        st.subheader("Aktuelle Lebensmittel im Kühlschrank")
         st.dataframe(st.session_state.df_food)
 
 
