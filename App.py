@@ -67,8 +67,7 @@ def add_food_to_fridge():
     if not st.session_state.df_food.empty:
         st.subheader("Aktuelle Lebensmittel im Kühlschrank")
         st.dataframe(st.session_state.df_food)
-    else:
-        st.write("Der Kühlschrank ist leer.")
+
 
 
 def save_data_to_database_food():
