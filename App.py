@@ -91,8 +91,7 @@ def add_food_to_fridge():
 
 
 def save_data_to_database_food():
-    if 'github' in st.session_state:
-        st.session_state.github.write_df(DATA_FILE, st.session_state.df_food, "Updated food data")
+    st.session_state.github.write_df(DATA_FILE, st.session_state.df_food, "Updated food data")
 
 
 
